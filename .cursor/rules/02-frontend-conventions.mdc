@@ -1,0 +1,27 @@
+---
+description: Frontend паттерны для RHF, Query и shadcn
+globs:
+  - "apps/frontend/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Frontend Conventions
+
+## Forms
+- Строй формы с `react-hook-form`.
+- Валидируй inputs перед mutation calls.
+- Держи form components небольшими и переиспользуемыми.
+
+## Data fetching
+- Используй TanStack Query hooks (`useQuery`, `useMutation`).
+- Держи query keys стабильными и typed там, где возможно.
+- Invalidate связанные queries после успешных mutations.
+
+## UI
+- Предпочитай shadcn/ui components и собирай их с Tailwind classes.
+- Соблюдай базовую accessibility: labels, button states и keyboard support.
+- Показывай явные loading/error/success states для async actions.
+
+## API boundaries
+- Держи API-логику в `apps/frontend/lib` и вызывай ее из hooks/components.
+- Никогда не хардкодь backend URLs в components; используй environment variables.

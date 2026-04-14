@@ -1,0 +1,35 @@
+---
+description: Принудительно соблюдать обязательный stack Signal Lab
+globs:
+  - "apps/frontend/**/*.{ts,tsx,js,jsx}"
+  - "apps/backend/**/*.ts"
+  - "prisma/**/*.prisma"
+alwaysApply: true
+---
+
+# Signal Lab Stack Enforcement
+
+Используй только утвержденный stack в этом репозитории.
+
+## Frontend requirements
+- Используй паттерны Next.js App Router.
+- Используй React Hook Form для всех форм пользовательского ввода.
+- Используй TanStack Query для всего server state и API mutations.
+- Используй компоненты shadcn/ui как UI primitives.
+- Используй Tailwind CSS для layout и styling.
+
+## Backend requirements
+- Используй архитектуру NestJS modules/controllers/services.
+- Используй Prisma для всего доступа к database.
+- Используй PostgreSQL как единственную database target.
+
+## Observability requirements
+- Сохраняй доступность Prometheus metrics на backend `/metrics`.
+- Сохраняй Loki-compatible structured logs для scenario flows.
+- Сохраняй Sentry instrumentation для backend exceptions.
+
+## Forbidden choices
+- Не добавляй Redux, Zustand, MobX или SWR для server state.
+- Не добавляй альтернативные ORM (TypeORM, Sequelize, Drizzle).
+- Не обходи Prisma через raw SQL без явного запроса.
+- Не заменяй NestJS/Next.js альтернативными frameworks.

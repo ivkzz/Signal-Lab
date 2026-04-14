@@ -1,0 +1,24 @@
+---
+description: Правила error handling для API и UI
+globs:
+  - "apps/backend/**/*.ts"
+  - "apps/frontend/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Error Handling Rules
+
+## Backend
+- Бросай typed HTTP exceptions для ошибок, вызванных client-side причинами.
+- Сохраняй observability для unhandled errors (logs + Sentry capture path).
+- Возвращай стабильные error payloads, которые frontend может отображать.
+- Не раскрывай внутренние stack traces или чувствительную configuration.
+
+## Frontend
+- Показывай дружелюбный error feedback (toast/message) для failed mutations.
+- Держи loading states явными, чтобы предотвращать двойные submissions.
+- Нормализуй отображение API errors и не раскрывай raw backend internals.
+
+## Cross-cutting
+- Обрабатывай `validation_error` как ожидаемый domain signal (warn level).
+- Обрабатывай `system_error` как критичный signal (error level + Sentry).

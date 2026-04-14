@@ -1,0 +1,24 @@
+---
+description: Правила Prisma schema и migration workflow
+globs:
+  - "prisma/schema.prisma"
+  - "apps/backend/src/**/*.ts"
+alwaysApply: false
+---
+
+# Prisma Patterns
+
+## Schema changes
+- Держи все изменения schema в `prisma/schema.prisma`.
+- Добавляй nullable fields осознанно и фиксируй обоснование в PR/notes.
+- Предпочитай явные model fields вместо хранения всего в JSON.
+
+## Migration workflow
+- После изменений schema запускай migration и generate client.
+- Проверяй, что backend build компилируется с обновленными Prisma types.
+- Обновляй seed scripts или test data, если изменение schema влияет на текущие flows.
+
+## Query patterns
+- Используй методы Prisma Client (`findMany`, `create`, `update` и т.д.).
+- Используй transactions для многошаговых writes, которые должны быть atomic.
+- Избегай raw SQL, если он не обоснован явно и не parameterized.

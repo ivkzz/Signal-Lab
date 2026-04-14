@@ -1,0 +1,38 @@
+# Hot reload для локальной разработки в Docker.
+# Запуск: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# Переменные — из `.env` в корне (как и для docker-compose.yml).
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile.dev
+    environment:
+      # Этот файл только для dev — не берём NODE_ENV из `.env` (там может быть production).
+      NODE_ENV: development
+      PORT: ${PORT:-3001}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-signal_lab}?schema=public
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      LOKI_URL: ${LOKI_URL:-http://loki:3101}
+    volumes:
+      - ./apps/backend/src:/app/apps/backend/src
+      - ./prisma:/app/prisma
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile.dev
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:${PORT:-3001}/api}
+      NEXT_PUBLIC_GRAFANA_URL: ${NEXT_PUBLIC_GRAFANA_URL:-http://localhost:${GRAFANA_PORT:-3100}}
+      NEXT_PUBLIC_PROMETHEUS_URL: ${NEXT_PUBLIC_PROMETHEUS_URL:-http://localhost:${PROMETHEUS_PORT:-9090}}
+      NEXT_PUBLIC_BACKEND_METRICS_URL: ${NEXT_PUBLIC_BACKEND_METRICS_URL:-http://localhost:${PORT:-3001}/metrics}
+    volumes:
+      - ./apps/frontend:/app/apps/frontend
+      - signal_lab_frontend_node_modules:/app/apps/frontend/node_modules
+      - signal_lab_frontend_next:/app/apps/frontend/.next
+
+volumes:
+  signal_lab_frontend_node_modules:
+  signal_lab_frontend_next:

@@ -1,0 +1,34 @@
+---
+description: Guardrails для metrics, logs и Sentry signals
+globs:
+  - "apps/backend/**/*.ts"
+alwaysApply: true
+---
+
+# Observability Guardrails
+
+Для каждого нового или измененного backend endpoint убедись, что все три telemetry channels остаются рабочими.
+
+## Metrics (Prometheus)
+- Добавляй или обновляй counters с осмысленными names и labels.
+- Предпочтительный naming:
+  - `scenario_runs_total{type,status}`
+  - `scenario_run_duration_seconds{type}`
+  - `http_requests_total{method,path,status_code}`
+- Избегай high-cardinality labels (без raw user input в значениях label).
+
+## Logging (Loki)
+- Пиши structured JSON-like logs со стабильными keys.
+- Включай `scenarioType`, `scenarioId`, `duration` и `error`, когда применимо.
+- Log levels должны соответствовать severity сигнала: info/warn/error.
+
+## Errors (Sentry)
+- Захватывай unhandled/critical exceptions.
+- Добавляй breadcrumb/context для validation или domain failures, где это полезно.
+- Никогда не отправляй secrets, tokens или PII в exception messages или context.
+
+## Verification checklist
+- `/metrics` по-прежнему возвращает валидный output.
+- Grafana dashboard queries по-прежнему работают.
+- Loki logs фильтруются по `scenarioType`.
+- Сценарий `system_error` по-прежнему появляется в Sentry.
