@@ -7,7 +7,7 @@ Playground для observability: Next.js (App Router) + NestJS + PostgreSQL (Pri
 **Нужно:** Docker Engine и плагин Compose; свободные порты из таблицы ниже.
 
 ```bash
-cp .env.example .env
+cp .env.example .env - добавить свой SENTRY_DSN
 docker compose up -d
 ```
 
