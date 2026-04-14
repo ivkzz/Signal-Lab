@@ -81,6 +81,7 @@ URL ниже — порты по умолчанию из `.env.example` (`3001` 
 | 1 | `add-scenario-endpoint` | Добавляет/расширяет endpoint сценария с observability |
 | 2 | `check-observability` | Аудит метрик, логов, Grafana и Sentry |
 | 3 | `run-signal-orchestrator` | Запускает orchestrator по PRD с сохранением context |
+| 4 | `continue-signal-orchestrator` | Resume по `executionId` с минимальным промптом в новом чате |
 
 ### Hooks
 

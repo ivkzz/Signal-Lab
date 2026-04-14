@@ -1,5 +1,19 @@
 # signal-orchestrator coordination
 
+## Ключи фаз (`currentPhase` / `phases`)
+
+| Ключ в JSON | Фаза PRD |
+|-------------|----------|
+| `analysis` | PRD Analysis |
+| `codebase` | Codebase Scan |
+| `planning` | Planning |
+| `decomposition` | Decomposition |
+| `implementation` | Implementation |
+| `review` | Review |
+| `report` | Report |
+
+Человекочитаемая таблица и политика экономии контекста: **`CURSOR_AI_LAYER.md`** в корне репозитория.
+
 ## Шаблон context (`context.json`)
 
 ```json
