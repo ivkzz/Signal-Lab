@@ -1,7 +1,7 @@
 import 'server-only'
 
 import { QueryClient } from '@tanstack/react-query'
-import { dashboardQueryKeys } from '@/lib/dashboard-query-keys'
+import { dashboardQueryKeys } from '@/features/home/query-keys'
 import { fetchInitialHealth, fetchInitialScenarioRuns } from '@/lib/server-api'
 
 /** Совпадает с `defaultOptions.queries` в `components/providers/app-providers.tsx`. */

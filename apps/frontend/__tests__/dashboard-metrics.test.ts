@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { countRunsByStatus, formatKpiValue } from '@/lib/dashboard-metrics'
+import { countRunsByStatus, formatKpiValue } from '@/features/home/metrics'
 
 describe('formatKpiValue', () => {
   it('returns an em dash until data is ready', () => {

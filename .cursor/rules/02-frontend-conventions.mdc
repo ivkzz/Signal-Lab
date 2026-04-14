@@ -36,6 +36,7 @@ alwaysApply: false
 Колокация, как в комментарии к статье (feature-папка: компоненты, типы, utils, hooks рядом):
 
 - `components/` — клиентские и серверные куски UI этой фичи; запросы (`useQuery` / `useMutation`), привязанные к конкретному блоку, по возможности **внутри** соответствующего компонента; общие для фичи опции запросов — в отдельном модуле рядом (например `*-remote-queries.ts`).
+- `query-keys.ts`, `metrics.ts` (или другие чистые хелперы фичи) — на уровне `features/<feature>/`, если они нужны и UI, и `server/`.
 - `types.ts`, `utils.ts` — домен фичи; типы, нужные **серверу** (prefetch, `server-api`), импортируй отсюда же, а не дублируй в `components/`.
 - `server/` — только сервер: `import 'server-only'`, prefetch, вызовы `lib/server-api` и т.п.
 - `*-page.tsx`, `*-dashboard.tsx` — оболочка маршрута и клиентский «остров», если нужен.
@@ -45,7 +46,7 @@ alwaysApply: false
 ### `lib/` — общие утилиты и интеграции
 
 - HTTP-клиент, разбор ошибок, ключи TanStack Query, общие хелперы **без** привязки к одному экрану.
-- Дроби по темам (`error-message.ts`, `dashboard-query-keys.ts`, …), избегай одного раздувающегося `utils.ts` на весь фронт (антипаттерн из статьи).
+- Дроби по темам (`error-message.ts`, `features/<feature>/query-keys.ts`, …), избегай одного раздувающегося `utils.ts` на весь фронт.
 - Модули, вызываемые из RSC / prefetch, с доступом к внутреннему API или секретам — с `import 'server-only'` (например `server-api.ts`).
 
 ### `public/`, конфиги
@@ -78,7 +79,7 @@ alwaysApply: false
 ## Data fetching
 
 - Используй TanStack Query hooks (`useQuery`, `useMutation`).
-- Держи query keys стабильными и typed там, где возможно; общие ключи — в `lib/` (один источник правды с серверным prefetch).
+- Держи query keys стабильными и typed там, где возможно; ключи, относящиеся к одной фиче, — рядом с ней (например `features/home/query-keys.ts`), чтобы и клиент, и `server/` prefetch импортировали один модуль.
 - Invalidate связанные queries после успешных mutations.
 - Несколько компонентов могут подписаться на **один и тот же** `queryKey` — сеть и кэш дедуплируются; колокуй запрос там, где данные отображаются или меняются.
 

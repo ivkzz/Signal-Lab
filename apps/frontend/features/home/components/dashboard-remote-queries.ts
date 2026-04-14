@@ -2,7 +2,7 @@
 
 import type { HealthPayload, ScenarioRun } from '@/features/home/types'
 import api from '@/lib/api'
-import { dashboardQueryKeys } from '@/lib/dashboard-query-keys'
+import { dashboardQueryKeys } from '@/features/home/query-keys'
 
 /** Опции удалённого `GET /health` (разделяйте в `useQuery`). */
 export const dashboardHealthRemoteQuery = {

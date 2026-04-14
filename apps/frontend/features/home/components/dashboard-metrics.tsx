@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Card } from '@/components/ui/card'
 import { DashboardRunsErrorBanner } from './dashboard-runs-error-banner'
 import { dashboardScenarioRunsRemoteQuery } from './dashboard-remote-queries'
-import { countRunsByStatus, formatKpiValue } from '@/lib/dashboard-metrics'
+import { countRunsByStatus, formatKpiValue } from '@/features/home/metrics'
 import { cn } from '@/lib/utils'
 
 type DashboardMetricsProps = {

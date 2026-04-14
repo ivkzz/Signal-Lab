@@ -13,7 +13,7 @@ import type { ScenarioFormValues, ScenarioType, WorkspaceTab } from '@/features/
 import { SCENARIO_TYPES } from '@/features/home/types'
 import { scenarioDescription } from '@/features/home/utils'
 import api from '@/lib/api'
-import { dashboardQueryKeys } from '@/lib/dashboard-query-keys'
+import { dashboardQueryKeys } from '@/features/home/query-keys'
 import { getUserFacingErrorMessage } from '@/lib/error-message'
 import { cn } from '@/lib/utils'
 
