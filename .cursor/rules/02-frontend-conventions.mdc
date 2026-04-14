@@ -22,6 +22,11 @@ alwaysApply: false
 - Соблюдай базовую accessibility: labels, button states и keyboard support.
 - Показывай явные loading/error/success states для async actions.
 
+## Визуальный дизайн и marketplace skills
+- Для заметного улучшения внешнего вида страниц (композиция, типографика, цвет, отступы, motion, копирайт в UI) **следуй workflow marketplace skill `frontend-design`** (Compound Engineering), если он доступен в сессии Cursor.
+- Дополнительно по необходимости: `shadcn-ui`, `tailwind-design-system` — для примитивов и utility-паттернов.
+- Навыки из маркетплейса должны быть **включены у пользователя в Cursor** (Skills / плагин); репозиторий только задаёт, *какие* имена использовать. Обзор слоя: `CURSOR_AI_LAYER.md` → раздел Marketplace skills.
+
 ## API boundaries
 - Держи API-логику в `apps/frontend/lib` и вызывай ее из hooks/components.
 - Никогда не хардкодь backend URLs в components; используй environment variables.

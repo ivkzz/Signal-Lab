@@ -208,10 +208,13 @@ Hooks (`.cursor/hooks.json`) остаются страховкой после п
 - `next-best-practices`
 - `shadcn-ui`
 - `tailwind-design-system`
+- `frontend-design` (визуальное качество UI — см. `.cursor/rules/02-frontend-conventions.mdc`)
 - `nestjs-best-practices`
 - `prisma-orm`
 - `docker-expert`
 - `postgresql-table-design`
+
+Имена навыков должны быть **подключены в Cursor** (Skills / marketplace / плагины): репозиторий задаёт рекомендуемый набор и когда что применять; без установки у пользователя агент не сможет вызвать конкретный skill по имени.
 
 Дополнительно по ситуации (не обязательно тащить всё в каждый чат): **Compound Engineering** (`ce-plan`, `ce-work`, `ce-review`, …), **Exa** (`exa-web-search`, `exa-fetch`) — см. также `SUBMISSION_CHECKLIST.md` для развёрнутой таблицы.
 
