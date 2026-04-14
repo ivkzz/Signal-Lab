@@ -2,7 +2,7 @@ import type { ReactElement } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import Home from '@/app/page'
+import { HomeDashboard } from '@/features/home'
 
 vi.mock('@/lib/api', () => {
   const pending = () =>
@@ -36,7 +36,7 @@ function renderWithClient(ui: ReactElement) {
 
 describe('Dashboard loading states', () => {
   it('does not show numeric KPI zeros while runs are still loading', async () => {
-    renderWithClient(<Home />)
+    renderWithClient(<HomeDashboard />)
 
     expect(await screen.findByText('Loading…')).toBeInTheDocument()
 

@@ -38,7 +38,7 @@ docker compose down
 | Next.js (App Router) | ✅ | `apps/frontend/app/layout.tsx`, `apps/frontend/app/page.tsx` |
 | shadcn/ui | ✅ | `apps/frontend/components/ui/button.tsx`, `apps/frontend/components/ui/card.tsx`, `apps/frontend/components/ui/input.tsx`, `apps/frontend/components/ui/badge.tsx` |
 | Tailwind CSS | ✅ | `apps/frontend/app/globals.css`, классы в `apps/frontend/app/page.tsx` |
-| TanStack Query | ✅ | `apps/frontend/app/providers.tsx`, `apps/frontend/app/page.tsx` |
+| TanStack Query | ✅ | `apps/frontend/components/providers/app-providers.tsx`, `apps/frontend/features/home/` |
 | React Hook Form | ✅ | `apps/frontend/app/page.tsx` (`useForm` + submit handling) |
 | NestJS | ✅ | `apps/backend/src/main.ts`, `apps/backend/src/app.module.ts` |
 | PostgreSQL | ✅ | `docker-compose.yml` service `postgres` |
@@ -105,7 +105,7 @@ URL ниже — порты по умолчанию из `.env.example` (`3001` 
 
 | # | Skill | Зачем подключён |
 |---|-------|----------------|
-| 1 | `next-best-practices` | App Router, границы SSR/CSR, production-паттерны Next.js |
+| 1 | `nextjs-patterns` | App Router, границы SSR/CSR, production-паттерны Next.js |
 | 2 | `shadcn-ui` | Сборка и доработка UI на общих примитивах shadcn |
 | 3 | `tailwind-design-system` | Utility-паттерны, токены и консистентная стилизация |
 | 4 | `nestjs-best-practices` | Модули, DI, обработка ошибок и структура NestJS |

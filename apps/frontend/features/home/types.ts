@@ -1,3 +1,6 @@
+/** Ответ `GET /health` — общий тип для серверного prefetch и клиентского `useQuery`. */
+export type HealthPayload = { status: string }
+
 export type ScenarioType = 'success' | 'validation_error' | 'system_error' | 'slow_request' | 'teapot'
 
 export type ScenarioFormValues = {

@@ -122,6 +122,7 @@ prds/
 | Быстрый аудит метрик / Loki / Grafana / Sentry | **`check-observability`** |
 | Только метрики/логи/Sentry вокруг существующего flow | **`observability-scenario`** |
 | Только форма + mutation + invalidation | **`rhf-tanstack-form`** |
+| Middleware, Server Actions, Route Handlers, кеш `fetch`, граница server/client | marketplace **`nextjs-patterns`** + правила **`02-frontend-conventions.mdc`** |
 
 Детали skill `signal-orchestrator`: `.cursor/skills/signal-orchestrator/SKILL.md`, шаблон состояния и промпты фаз: **`COORDINATION.md`**, примеры: **`EXAMPLE.md`**.
 
@@ -182,6 +183,10 @@ Hooks (`.cursor/hooks.json`) остаются страховкой после п
 - `scenario-creator` — для добавления новых сценариев.
 - `rhf-tanstack-form` — для форм на RHF + TanStack Query.
 
+### 4) Через marketplace (frontend)
+
+- **`nextjs-patterns`** — углублённые паттерны App Router: middleware (matcher, public vs protected), защита мутаций в Server Actions, Route Handlers и коды 401/403, user-scoped ключи для кеша, чёткое разделение server vs client. Репозиторийные правила по стеку и границам API: **`02-frontend-conventions.mdc`**, **`01-stack-enforcement.mdc`**. Тексты skill часто иллюстрируются Clerk; в Signal Lab источник правды по данным — **NestJS + Prisma**, поэтому переноси идеи skill, не подменяя архитектуру без явной задачи.
+
 ## Как AI layer помогает Cursor работать без разработчика
 
 - Даёт жёсткие ограничения по стеку и архитектурным решениям.
@@ -205,7 +210,7 @@ Hooks (`.cursor/hooks.json`) остаются страховкой после п
 
 ## Marketplace skills (рекомендуемый набор)
 
-- `next-best-practices`
+- `nextjs-patterns` — см. подраздел **«Через marketplace (frontend)»** в разделе [Как использовать](#как-использовать); пересекается с `02-frontend-conventions.mdc` (раздел Next.js App Router).
 - `shadcn-ui`
 - `tailwind-design-system`
 - `frontend-design` (визуальное качество UI — см. `.cursor/rules/02-frontend-conventions.mdc`)

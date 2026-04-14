@@ -1,5 +1,5 @@
 ---
-description: Frontend паттерны для RHF, Query и shadcn
+description: Frontend — структура apps/frontend, App Router, RHF, TanStack Query, shadcn; ссылка на nextjs-patterns
 globs:
   - "apps/frontend/**/*.{ts,tsx}"
 alwaysApply: false
@@ -7,26 +7,95 @@ alwaysApply: false
 
 # Frontend Conventions
 
+Ориентир по раскладке папок и границам слоёв — [Best Practices for Organizing Your Next.js 15 (DEV, 2025)](https://dev.to/bajrayejoon/best-practices-for-organizing-your-nextjs-15-2025-53ji): тонкий `app/`, общие примитивы в `components/`, фичи с колокацией типов и запросов, `lib/` без «чёрной дыры» из одного `utils.ts`.
+
+## Структура `apps/frontend`
+
+Цель: по пути файла было понятно, **маршрут** это, **общий UI** или **конкретная фича**.
+
+### `app/` — только маршрутизация и корень UI
+
+- `layout.tsx`, `page.tsx`, глобальные стили (`globals.css`).
+- **Segment config** остаётся здесь: `dynamic`, `revalidate`, `metadata` / `generateMetadata` — Next читает их из файлов внутри `app/`, не выноси эти экспорты во внешние модули без необходимости.
+- `page.tsx` держи **тонким**: импорт страницы-оболочки из `features/<name>/` (например `HomePage`), без разросшейся разметки и бизнес-логики.
+- **Route groups** `(marketing)/`, `(dashboard)/` и т.п. — когда появятся разные секции сайта; группа не меняет URL.
+- **Route Handlers** `app/**/route.ts` — узкий слой (см. ниже).
+
+Не переноси в `app/` всё подряд («everything in app» из статьи): композиция страницы и фича — в `features/`.
+
+### `components/` — переиспользуемое между фичами
+
+- `ui/` — примитивы shadcn/ui (Button, Card, …), без доменной логики Signal Lab.
+- `theme/` — провайдер и переключатель темы (`next-themes`).
+- `providers/` — корневые клиентские провайдеры (например TanStack Query + Toaster вокруг `children`).
+
+Сюда **не** клади экранные блоки, которые используются одной страницей (дашборд главной, форма сценария и т.д.) — им место в `features/<feature>/components/`.
+
+### `features/<feature>/` — одна пользовательская возможность целиком
+
+Колокация, как в комментарии к статье (feature-папка: компоненты, типы, utils, hooks рядом):
+
+- `components/` — клиентские и серверные куски UI этой фичи; запросы (`useQuery` / `useMutation`), привязанные к конкретному блоку, по возможности **внутри** соответствующего компонента; общие для фичи опции запросов — в отдельном модуле рядом (например `*-remote-queries.ts`).
+- `types.ts`, `utils.ts` — домен фичи; типы, нужные **серверу** (prefetch, `server-api`), импортируй отсюда же, а не дублируй в `components/`.
+- `server/` — только сервер: `import 'server-only'`, prefetch, вызовы `lib/server-api` и т.п.
+- `*-page.tsx`, `*-dashboard.tsx` — оболочка маршрута и клиентский «остров», если нужен.
+
+**Barrel `features/<feature>/index.ts`:** не реэкспортируй entry, который тянет `server-only` (например `HomePage`), если тот же barrel импортируют из unit-тестов или из чисто клиентского кода — иначе сборка/тесты упрутся в ограничение `server-only`.
+
+### `lib/` — общие утилиты и интеграции
+
+- HTTP-клиент, разбор ошибок, ключи TanStack Query, общие хелперы **без** привязки к одному экрану.
+- Дроби по темам (`error-message.ts`, `dashboard-query-keys.ts`, …), избегай одного раздувающегося `utils.ts` на весь фронт (антипаттерн из статьи).
+- Модули, вызываемые из RSC / prefetch, с доступом к внутреннему API или секретам — с `import 'server-only'` (например `server-api.ts`).
+
+### `public/`, конфиги
+
+- Статика — в `public/`; корень фронта — `next.config.ts`, `tsconfig.json`, тесты рядом с кодом (`__tests__/`).
+
+### Глубина вложенности
+
+Не уводи пути вида `components/features/foo/bar/baz/widgets/tiny/index.tsx` без нужды: предпочитай плоский `features/foo/components/` и понятные имена файлов.
+
+---
+
+## Next.js App Router
+
+- По умолчанию **Server Components**. Директива `'use client'` только там, где нужны браузерные API, события DOM, React Hook Form или TanStack Query.
+- Вызовы к **NestJS API** из RSC и server utilities держи в модулях с `import 'server-only'` (например `apps/frontend/lib/server-api.ts`): не тяни секреты и «внутренние» base URL в client bundle.
+- Для `fetch` к API задавай **явную** политику кеша (`cache: 'no-store'` для часто меняющихся данных; `revalidate` / `force-cache` — только осознанно и с понятным TTL).
+- **Route Handlers** (`app/**/route.ts`): тонкий слой (прокси, webhooks, edge cases); бизнес-логика и Prisma остаются на backend. Стабильные HTTP-коды: 401 «не аутентифицирован», 403 «нет прав» — не путай смысл.
+- **Server Actions** (если появляются): валидация входа на сервере, идемпотентность там, где уместно, проверка прав до мутации; не дублируй критичную логику Nest без причины.
+- **Middleware**: узкий `matcher`, минимум работы на edge; не помещай туда тяжёлые зависимости или секреты.
+
+Для углублённых сценариев (middleware-стратегии, Server Actions, user-scoped caching, граница server vs client) **следуй marketplace skill `nextjs-patterns`**, если он подключён у пользователя. Примеры в skill часто на **Clerk** (`await auth()` на сервере, `useAuth()` в клиенте): переноси **модель** «async auth на сервере / hooks на клиенте, не смешивать импорты», а конкретные пакеты и провайдеры — только в рамках принятого в репозитории стека.
+
 ## Forms
+
 - Строй формы с `react-hook-form`.
 - Валидируй inputs перед mutation calls.
 - Держи form components небольшими и переиспользуемыми.
 
 ## Data fetching
+
 - Используй TanStack Query hooks (`useQuery`, `useMutation`).
-- Держи query keys стабильными и typed там, где возможно.
+- Держи query keys стабильными и typed там, где возможно; общие ключи — в `lib/` (один источник правды с серверным prefetch).
 - Invalidate связанные queries после успешных mutations.
+- Несколько компонентов могут подписаться на **один и тот же** `queryKey` — сеть и кэш дедуплируются; колокуй запрос там, где данные отображаются или меняются.
 
 ## UI
+
 - Предпочитай shadcn/ui components и собирай их с Tailwind classes.
 - Соблюдай базовую accessibility: labels, button states и keyboard support.
 - Показывай явные loading/error/success states для async actions.
 
 ## Визуальный дизайн и marketplace skills
+
+- **Маршрутизация и кеш Next.js:** `nextjs-patterns` — middleware, Server Actions, Route Handlers, кеш и server/client auth-границы (см. также раздел выше).
 - Для заметного улучшения внешнего вида страниц (композиция, типографика, цвет, отступы, motion, копирайт в UI) **следуй workflow marketplace skill `frontend-design`** (Compound Engineering), если он доступен в сессии Cursor.
 - Дополнительно по необходимости: `shadcn-ui`, `tailwind-design-system` — для примитивов и utility-паттернов.
 - Навыки из маркетплейса должны быть **включены у пользователя в Cursor** (Skills / плагин); репозиторий только задаёт, *какие* имена использовать. Обзор слоя: `CURSOR_AI_LAYER.md` → раздел Marketplace skills.
 
 ## API boundaries
-- Держи API-логику в `apps/frontend/lib` и вызывай ее из hooks/components.
+
+- Держи общую API-логику в `apps/frontend/lib` и вызывай её из компонентов фич или из `server-only` модулей.
 - Никогда не хардкодь backend URLs в components; используй environment variables.

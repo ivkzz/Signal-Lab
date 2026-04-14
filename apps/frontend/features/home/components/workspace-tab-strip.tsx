@@ -1,7 +1,7 @@
 'use client'
 
+import type { WorkspaceTab } from '@/features/home/types'
 import { cn } from '@/lib/utils'
-import type { WorkspaceTab } from './types'
 
 type WorkspaceTabStripProps = {
   tab: WorkspaceTab

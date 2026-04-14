@@ -1,7 +1,7 @@
 'use client'
 
-import type { HealthStateClass } from './utils'
-import { healthLiveTextForClass } from './utils'
+import type { HealthStateClass } from '@/features/home/utils'
+import { healthLiveTextForClass } from '@/features/home/utils'
 
 type DashboardHealthLiveProps = {
   healthClass: HealthStateClass

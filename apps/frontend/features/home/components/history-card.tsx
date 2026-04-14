@@ -1,21 +1,22 @@
 'use client'
 
+import { useQuery } from '@tanstack/react-query'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { dashboardScenarioRunsRemoteQuery } from './dashboard-remote-queries'
+import { formatDuration, statusVariant } from '@/features/home/utils'
 import { cn } from '@/lib/utils'
-import type { ScenarioRun } from './types'
-import { formatDuration, statusVariant } from './utils'
 
 type HistoryCardProps = {
-  runs: ScenarioRun[] | undefined
-  runsLoading: boolean
-  runsIsError: boolean
-  runsIsSuccess: boolean
   workspaceTab: 'form' | 'history'
   className?: string
 }
 
-export function HistoryCard({ runs, runsLoading, runsIsError, runsIsSuccess, workspaceTab, className }: HistoryCardProps) {
+export function HistoryCard({ workspaceTab, className }: HistoryCardProps) {
+  const { data: runs, isLoading: runsLoading, isError: runsIsError, isSuccess: runsIsSuccess } = useQuery(
+    dashboardScenarioRunsRemoteQuery,
+  )
+
   return (
     <Card
       className={cn(

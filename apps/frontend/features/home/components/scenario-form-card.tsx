@@ -1,26 +1,77 @@
 'use client'
 
-import type { UseMutationResult } from '@tanstack/react-query'
-import { Controller, type UseFormReturn } from 'react-hook-form'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
+import { Controller, useForm, useWatch } from 'react-hook-form'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import type { ScenarioFormValues, ScenarioType, WorkspaceTab } from '@/features/home/types'
+import { SCENARIO_TYPES } from '@/features/home/types'
+import { scenarioDescription } from '@/features/home/utils'
+import api from '@/lib/api'
+import { dashboardQueryKeys } from '@/lib/dashboard-query-keys'
+import { getUserFacingErrorMessage } from '@/lib/error-message'
 import { cn } from '@/lib/utils'
-import type { ScenarioFormValues, ScenarioType } from './types'
-import { SCENARIO_TYPES } from './types'
-import { scenarioDescription } from './utils'
 
 type ScenarioFormCardProps = {
-  form: UseFormReturn<ScenarioFormValues>
-  runScenario: UseMutationResult<unknown, unknown, ScenarioFormValues, unknown>
-  selectedType: ScenarioType
-  workspaceTab: 'form' | 'history'
+  workspaceTab: WorkspaceTab
+  /** После успешного run (например переключить вкладку на мобиле). */
+  onScenarioRan?: () => void
   className?: string
 }
 
-export function ScenarioFormCard({ form, runScenario, selectedType, workspaceTab, className }: ScenarioFormCardProps) {
+export function ScenarioFormCard({ workspaceTab, onScenarioRan, className }: ScenarioFormCardProps) {
+  const queryClient = useQueryClient()
+
+  const form = useForm<ScenarioFormValues>({
+    defaultValues: {
+      type: 'success',
+      name: '',
+    },
+  })
+
+  const selectedType = useWatch({
+    control: form.control,
+    name: 'type',
+    defaultValue: 'success',
+  }) as ScenarioType
+
+  const runScenario = useMutation({
+    mutationFn: async (payload: ScenarioFormValues) => {
+      const { data } = await api.post('/scenarios/run', payload)
+      return data
+    },
+    onSuccess: async (_data, variables) => {
+      toast.success('Scenario completed', {
+        description: `Type: ${variables.type}`,
+      })
+      form.reset({ ...form.getValues(), name: '' })
+      onScenarioRan?.()
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error.response?.status === 418) {
+        const body = error.response.data as { message?: string; signal?: number } | undefined
+        toast.info("I'm a teapot", {
+          description:
+            typeof body?.message === 'string'
+              ? `${body.message}${typeof body.signal === 'number' ? ` (signal ${body.signal})` : ''}`
+              : 'HTTP 418 — run saved with easter metadata.',
+        })
+        return
+      }
+      toast.error('Scenario request failed', {
+        description: getUserFacingErrorMessage(error),
+      })
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({ queryKey: dashboardQueryKeys.scenarioRuns })
+    },
+  })
+
   return (
     <Card
       className={cn(

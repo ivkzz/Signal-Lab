@@ -1,4 +1,4 @@
-import type { ScenarioType } from './types'
+import type { ScenarioType } from '@/features/home/types'
 
 export type HealthStateClass = 'loading' | 'ok' | 'error' | 'degraded' | 'unknown'
 
