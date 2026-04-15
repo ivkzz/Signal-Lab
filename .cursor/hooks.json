@@ -3,13 +3,13 @@
   "hooks": {
     "afterFileEdit": [
       {
-        "command": "node .cursor/hooks/signal-lab-after-file-edit.cjs",
+        "command": "bash .cursor/hooks/signal-lab-after-file-edit.sh",
         "timeout": 15
       }
     ],
     "beforeShellExecution": [
       {
-        "command": "node .cursor/hooks/signal-lab-before-git-commit.cjs",
+        "command": "bash .cursor/hooks/signal-lab-before-git-commit.sh",
         "matcher": "git\\s+commit|git\\.exe\\s+commit",
         "timeout": 30
       }

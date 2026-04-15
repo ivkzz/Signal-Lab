@@ -1,0 +1,2 @@
+# Bash hook entrypoints must use LF (Cursor / Git Bash / Unix).
+.cursor/hooks/*.sh text eol=lf
