@@ -1,34 +1,18 @@
 {
-  "hooks": [
-    {
-      "name": "prisma-schema-guard",
-      "event": "afterEdit",
-      "include": [
-        "prisma/schema.prisma"
-      ],
-      "action": {
-        "type": "prompt",
-        "message": "Schema обновлена: запусти Prisma migration/generate flow и проверь компиляцию backend."
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "node .cursor/hooks/signal-lab-after-file-edit.cjs",
+        "timeout": 15
       }
-    },
-    {
-      "name": "backend-observability-reminder",
-      "event": "afterEdit",
-      "include": [
-        "apps/backend/src/**/*.ts"
-      ],
-      "action": {
-        "type": "prompt",
-        "message": "Backend code изменен: проверь coverage для metrics/log/Sentry и сохрани валидность `/metrics` + dashboard queries."
+    ],
+    "beforeShellExecution": [
+      {
+        "command": "node .cursor/hooks/signal-lab-before-git-commit.cjs",
+        "matcher": "git\\s+commit|git\\.exe\\s+commit",
+        "timeout": 30
       }
-    },
-    {
-      "name": "pre-commit-secrets-check",
-      "event": "beforeCommit",
-      "action": {
-        "type": "command",
-        "command": "rg -n --hidden --glob \"!.git\" --glob \"!.next\" \"(SENTRY_DSN=.+|DATABASE_URL=.+|API_KEY=.+|SECRET=.+)\" .env*"
-      }
-    }
-  ]
+    ]
+  }
 }
