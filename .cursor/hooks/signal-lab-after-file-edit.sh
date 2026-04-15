@@ -31,5 +31,17 @@ if [[ "$npath" == */apps/backend/src/* ]] && [[ "$npath" == *.ts ]]; then
   echo '[signal-lab] Backend TS изменён: проверь metrics / structured logs / Sentry и валидность `/metrics` + dashboard queries.' >&2
 fi
 
+if [[ "$npath" == */prisma/migrations/* ]] || [[ "$npath" == *prisma/migrations/* ]]; then
+  echo '[signal-lab] Миграция Prisma: проверь порядок/идемпотентность; deploy — prisma migrate deploy из apps/backend с --schema ../../prisma/schema.prisma.' >&2
+fi
+
+if [[ "$npath" == */scenario.types.ts ]] || [[ "$npath" == */features/home/types.ts ]]; then
+  echo '[signal-lab] Контракт scenario types: синхронизируй backend scenario.types.ts ↔ frontend features/home/types.ts (+ RunScenarioDto и UI форма/опции).' >&2
+fi
+
+if [[ "$npath" == */apps/frontend/features/* ]] && [[ "$npath" == *.tsx ]]; then
+  echo '[signal-lab] Frontend feature TSX: стек — React Hook Form, TanStack Query, shadcn/ui, Tailwind (@.cursor/rules/01–02).' >&2
+fi
+
 json_out '{}'
 exit 0
