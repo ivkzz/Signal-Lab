@@ -1,0 +1,23 @@
+---
+description: Утверждённый стек Signal Lab — краткая выжимка; детали в 01–05
+globs:
+  - "prisma/**/*.prisma"
+  - "docker-compose.yml"
+  - "docker-compose*.yml"
+  - "apps/backend/**/*.ts"
+  - "apps/frontend/**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Stack-specific (выжимка)
+
+Полные требования и запреты — в `@.cursor/rules/01-stack-enforcement.mdc`.
+
+| Слой | Утверждено |
+|------|------------|
+| Frontend | Next.js App Router, React Hook Form, TanStack Query, shadcn/ui, Tailwind |
+| Backend | NestJS (modules/controllers/services), Prisma, PostgreSQL |
+| Observability | Prometheus `/metrics`, Loki-совместимые логи сценариев, Sentry на backend |
+| Infra | `docker-compose.yml` / `docker-compose.dev.yml` для локального стека — не ломай контракт сервисов без явной задачи |
+
+Prisma: миграции и `prisma generate` после изменений схемы; raw SQL — только по явному запросу (см. `04-prisma-patterns.mdc`).

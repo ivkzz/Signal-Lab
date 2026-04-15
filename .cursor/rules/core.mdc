@@ -1,0 +1,12 @@
+---
+description: Ядро AI-слоя — цель репозитория и указатель на детальные rules
+alwaysApply: true
+---
+
+# Signal Lab — ядро контекста для агента
+
+- **Проект:** монорепозиторий с `apps/backend` (NestJS + Prisma + PostgreSQL) и `apps/frontend` (Next.js App Router). Схема БД: `prisma/schema.prisma`.
+- **Источник правды по стеку и запретам:** `@.cursor/rules/01-stack-enforcement.mdc` и остальные нумерованные правила `02`–`05`.
+- **Экономия токенов и выбор моделей:** `@.cursor/rules/token-economy.mdc`.
+- **Крупные задачи по PRD:** файловый оркестратор и `.execution/` — см. `CURSOR_AI_LAYER.md` и skill `signal-orchestrator`.
+- **Не дублируй** длинные чеклисты из rules/skills в чате — подключай нужный файл через `@` или вызывай соответствующий skill/command.

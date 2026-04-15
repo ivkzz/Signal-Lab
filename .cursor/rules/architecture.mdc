@@ -1,0 +1,20 @@
+---
+description: Границы монорепозитория и слоёв backend/frontend
+globs:
+  - "apps/**/*.{ts,tsx,js,jsx}"
+alwaysApply: false
+---
+
+# Архитектура Signal Lab
+
+## Монорепозиторий
+
+- **`apps/backend`:** NestJS — модули, контроллеры, сервисы; единая точка HTTP API для frontend; Prisma Client из корневого `prisma/`.
+- **`apps/frontend`:** Next.js App Router — маршруты в `app/`, фичи в `features/`, общие UI в `components/`; server state и мутации через TanStack Query (см. `02-frontend-conventions.mdc`).
+- **`prisma/`:** единая схема и миграции для PostgreSQL; команды generate/migrate из `apps/backend` указывают на `../../prisma/schema.prisma`.
+
+## Границы ответственности
+
+- Бизнес-логика сценариев и персистентность — **backend** + Prisma; UI и вызовы API — **frontend**.
+- Не протаскивай секреты БД и Sentry в клиентский бандл; переменные окружения — по соглашениям Next/Nest для каждого приложения.
+- Observability (метрики, структурированные логи, Sentry) для изменённых backend endpoints — см. `03-observability-guardrails.mdc`.
