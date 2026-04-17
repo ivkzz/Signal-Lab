@@ -49,3 +49,6 @@ docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 - Полное описание rules / skills / commands / hooks / marketplace: **`CURSOR_AI_LAYER.md`**.
 - Оркестратор PRD (фазы, `context.json`, resume): **`.cursor/skills/signal-orchestrator/SKILL.md`** (PRD 004).
 - Требования по фичам и стеку: **`prds/`** (`001` — платформа, `002` — observability, `003` — AI-слой, `004` — orchestrator).
+
+
+Еще в результате выполнения этого задания, начал вести проект для настройки ai слоя для курсора https://github.com/ivkzz/cursor-starter
